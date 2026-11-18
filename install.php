@@ -52,5 +52,22 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     <?php echo $mensaje; ?>
                 </div>
             <?php endif; ?> 
+            <form action="install.php" method="POST">
+                <div style="background: var(--bg-light); padding: 1.5rem; border-radius: 6px; text-align: left; margin-bottom: 2rem; font-size: 0.95rem;"> 
+                    <p style="margin-bottom: 0.5rem;"><strong>Credenciales que se registrarán:</strong></p> 
+                    <p>📧<strong>Correo:</strong> admin@aromaygrano.com</p> 
+                    <p>🔑<strong>Contraseña:</strong> Admin123*</p> 
+                </div> 
+                <button type="submit" class="btn" style="width: 100%; padding: 0.9rem;">Crear Administrador</button> 
+            </form>
+            <div style="margin-top: 2rem; border-top: 1px solid #eee; padding-top: 1.5rem;"> 
+                <a href="login.php" style="color: var(--secondary-color); text-decoration: none; font-weight: bold;">Ir a Iniciar Sesión ➔</a> 
+            </div> 
+        </div> 
+    </div> 
+    </main> 
+    <footer class="main-footer"> 
+        <p>&copy; 2026 Aroma y Grano. Todos los derechos reservados. | Desarrollado para PHP Nivel III Uneweb.</p> 
+    </footer>
 </body>
 </html>   
