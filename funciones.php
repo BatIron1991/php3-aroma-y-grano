@@ -25,7 +25,7 @@ function procesar_imagen_gd($archivo, $carpeta_destino){
             $imagen_orig = imagecreatefromjpeg($nombre_temp);
             break;
         case IMAGETYPE_PNG:
-            %imagen_orig = imagecreatefrompng($nombre_temp)
+            $imagen_orig = imagecreatefrompng($nombre_temp);
             break;
         default:
             return false;
