@@ -2,34 +2,47 @@
 require_once 'conexion.php';
 require_once 'funciones.php';
 
-if(!isset($_SESSION['usuario'])){
+// Verificar que el usuario haya iniciado sesión
+if (!isset($_SESSION['usuario'])) {
     header("Location: login.php?redirect=checkout");
     exit();
 }
-if(empty($_SESSION['carrito'])){
+
+// Verificar que el carrito no esté vacío
+if (empty($_SESSION['carrito'])) {
     header("Location: index.php");
     exit();
 }
+
 $usuario_id = $_SESSION['usuario']['id'];
 $total_general = 0;
-foreach ($_SESSION['carrito'] as $item){
+
+foreach ($_SESSION['carrito'] as $item) {
     $total_general += $item['precio'] * $item['cantidad'];
 }
-try{
+
+try {
     $pdo->beginTransaction();
-    $stmt = $pdo->prepare("INSERT INTO pedidos(usuario_id, total, estado) VALUES (?,?,'Pendiente')");
+
+    // 1. Insertar en la tabla de Pedidos
+    $stmt = $pdo->prepare("INSERT INTO pedidos (usuario_id, total, estado) VALUES (?, ?, 'Pendiente')");
     $stmt->execute([$usuario_id, $total_general]);
     $pedido_id = $pdo->lastInsertId();
 
-    $stmt_detalle = $pdo->prepare("INSERT INTO detalle_pedidos(predido_id, productos_id, cantidad, precio_usuario) VALUES(?, ?, ?, ?)");
-    foreach ($_SESSION['carrito'] as $id =>$item){
+    // 2. Insertar en la tabla Detalle de Pedidos
+    $stmt_detalle = $pdo->prepare("INSERT INTO detalle_pedidos (pedido_id, producto_id, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
+    
+    foreach ($_SESSION['carrito'] as $id => $item) {
         $stmt_detalle->execute([$pedido_id, $id, $item['cantidad'], $item['precio']]);
     }
+
     $pdo->commit();
 
+    // 3. Borrar variables de sesión del carrito
     unset($_SESSION['carrito']);
+
     $exito = true;
-}catch(Exception $e){
+} catch (Exception $e) {
     $pdo->rollBack();
     $exito = false;
     $error_msg = $e->getMessage();
@@ -40,7 +53,7 @@ try{
 <head>
     <meta charset="UTF-8">
     <title>Confirmación de Compra | Aroma y Grano</title>
-    <link rel="stylesheet" href="assets/css/estilos.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header>
